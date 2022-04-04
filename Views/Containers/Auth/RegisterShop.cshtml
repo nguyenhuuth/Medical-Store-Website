@@ -1,0 +1,91 @@
+@using MedicalStore.Utils.Common
+@{
+    this.ViewData["Title"] = Routers.RegisterShop.Title;
+}
+
+<div class="min-h-full flex ">
+    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+        <div class="mx-auto w-full max-w-sm lg:w-96">
+            <div>
+                <img class="h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                    alt="Workflow" />
+                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Sign up new shop account</h2>
+            </div>
+
+            <div class="mt-8">
+
+                <div class="mt-6 relative">
+                    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                        <div class="w-full border-t border-gray-300 mb-2" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <form id="registerShopForm" class="space-y-6">
+
+                    <div class="space-y-1">
+                        @await Html.PartialAsync("../../Components/Form/FormMessage.cshtml")
+                        <div class="space-y-2 ">
+                            <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                type="text" name="name" id="name" value="" placeholder="Shop Name" />
+                            <div id="NAMERROR" data-label="" class="text-red-500 "></div>
+                        </div>
+                        <div class="space-y-2 ">
+                            <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                type="text" name="username" id="username" value="" placeholder="Username" />
+                            <div id="USERNAMEERROR" data-label="" class="text-red-500 "></div>
+                        </div>
+                        <div class="space-y-2 ">
+                            <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                type="password" name="password" id="password" value="" placeholder="Password" />
+                            <div id="PASSWORDERROR" data-label="" class="text-red-500 "></div>
+                        </div>
+                        <div class="space-y-2 ">
+                            <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                type="password" name="confirmPassword" id="confirmPassword" value=""
+                                placeholder="Confirm Password" />
+                            <div id="CONFIRMPASSWORDERROR" data-label="" class="text-red-500 "></div>
+                        </div>
+                        <div class="space-y-2 ">
+                            <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                type="text" name="phone" id="phone" value="" placeholder="Phone" />
+                            <div id="PHONEERROR" data-label="" class="text-red-500 "></div>
+                        </div>
+                        <div class="space-y-2 ">
+                            <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                type="text" name="email" id="email" value="" placeholder="Email" />
+                            <div id="EMAILERROR" data-label="" class="text-red-500 "></div>
+                        </div>
+                        <div class="space-y-2 ">
+                            <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                type="text" name="address" id="address" value="" placeholder="Address" />
+                            <div id="ADDRESSERROR" data-label="" class="text-red-500 "></div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Sign up
+                        </button>
+                        <a href="@Routers.Login.Link"
+                            class="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign
+                            in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hidden lg:block relative w-0 flex-1">
+    <img class="absolute inset-0 h-screen w-full object-cover"
+        src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+        alt="">
+</div>
+</div>
+
+@section Scripts {
+
+<script src="/js/registerShop.js"></script>
+
+}

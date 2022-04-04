@@ -1,0 +1,53 @@
+﻿@using MedicalStore.Utils.Common
+@model IEnumerable<MedicalStore.Models.ReportTicket>
+@{
+    this.ViewData["Title"] = Routers.CreateReport.Title;
+    var report = (ReportTicket)this.ViewData["report"];
+    var product = (Product)this.ViewData["product"];
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="content">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">Create Report</h2>
+                </div>
+                <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                    <img src="@product.ImageUrl" alt="@product.Name" width="300px" height="300px"/>
+                </div>
+                <dl class="mt-2 divide-y divide-gray-200">
+                    <form id="createForm" class="space-y-6">
+                        @await Html.PartialAsync("../../Components/Form/FormMessage.cshtml")
+                            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Product Name</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                           type="text" name="productName" id="productName" value="@product.Name" placeholder="ProductId" readonly />
+                                </dd>
+                            </div>
+                            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Report Information</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <textarea rows="4" name="description" id="description" class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control" placeholder="Description"></textarea>
+                                    <div id="DESCRIPTIONERROR" data-label="Description" class="text-red-500 "></div>
+                                </dd>
+                            </div>
+                            <input type="hidden" name="productId" id="productId" value="@product.ProductId"/>   
+                            <div>
+                                <button type="submit"
+                                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Create
+                                </button>
+                            </div>
+                    </form>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+    @section Scripts {
+        
+        <script src="/js/report/create.js"></script>
+    }

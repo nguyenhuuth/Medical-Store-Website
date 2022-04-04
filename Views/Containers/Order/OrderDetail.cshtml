@@ -1,0 +1,97 @@
+﻿@using MedicalStore.Utils.Common
+@using MedicalStore.DAO.Interface;
+@{
+    var order = (Order)this.ViewData["order"];
+    var listProduct = (List<Product>)this.ViewData["listProduct"];
+    var listOrderItem = (List<OrderItem>)this.ViewData["listOrderItem"];
+    var listShopName = (List<string>)this.ViewData["listShopName"];
+    float total = (float)this.ViewData["total"];
+    var customerName = this.ViewData["customerName"];
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="content">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">Order number #@order.OrderId Detail</h2>
+                </div>
+                <div class="p-5" id="hoverable-table">
+                    <div class="preview">
+                        <div class="overflow-x-auto">
+                            <section aria-labelledby="order-heading" class="mt-10 border-t border-gray-200">
+                                <h2 id="order-heading" class="sr-only">Your order</h2>
+                                <h3 class="sr-only">Items</h3>
+                                @for(int i = 0; i < listProduct.Count; i++)
+                                {
+                                    <div class="py-10 border-b border-gray-200 flex space-x-6">
+                                        <img src="@listProduct[i].ImageUrl" alt="@listProduct[i].Name" class="flex-none w-20 h-20 object-center object-cover bg-gray-100 rounded-lg sm:w-40 sm:h-40">
+
+                                        <div class="flex-auto flex flex-col">
+                                            <div>
+                                                <h4 class="font-medium text-gray-900">
+                                                    <a href="/product/detail?productId=@listProduct[i].ProductId">@listProduct[i].Name</a>
+                                                </h4>
+                                                <p class="mt-2 text-sm text-gray-600">Description: @listProduct[i].Description</p>
+                                                <p class="mt-2 text-sm text-gray-600">Shop Name: @listShopName[i]</p>
+                                            </div>
+                                            <div class="mt-6 flex-1 flex items-end">
+                                                <dl class="flex text-sm divide-x divide-gray-200 space-x-4 sm:space-x-6">
+                                                    <div class="flex">
+                                                    <dt class="font-medium text-gray-900">Quantity</dt>
+                                                    <dd class="ml-2 text-gray-700">@listOrderItem[i].Quantity</dd>
+                                            </div>
+                                            <div class="flex">
+                                                <dt class="font-medium text-gray-900">Sale Price</dt>
+                                                <dd class="ml-2 text-gray-700">@listProduct[i].RetailPrice VND</dd>
+                                            </div>
+                                            </dl>
+                                        </div>
+                                    </div>
+                            </div>
+                        }
+                            </div>
+                            <div class="sm:ml-40 sm:pl-6">
+                                <h4 class="sr-only">Payment</h4>
+                                    <dl class="grid grid-cols-2 gap-x-6 border-t border-gray-200 text-sm py-10">
+                                        <div> 
+                                            <dt class="font-medium text-gray-900">Payment method</dt>
+                                            <dd class="mt-2 text-gray-700">
+                                                <p>@order.PaymentMethod</p>
+                                            </dd>
+                                        </div>
+                                    </dl>
+                            </div>
+
+                            <h3 class="sr-only">Summary</h3>
+
+                            <dl class="space-y-6 border-t border-gray-200 text-sm pt-10">
+                                <div class="flex justify-between">
+                                <dt class="font-medium text-gray-900">Subtotal</dt>
+                                <dd class="text-gray-700">@total VND</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="font-medium text-gray-900">Create Date</dt>
+                            <dd class="text-gray-900">@order.CreateDate</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="font-medium text-gray-900">Customer</dt>
+                            <dd class="text-gray-900">@customerName.ToString()</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="font-medium text-gray-900">Status</dt>
+                            <dd class="text-gray-900">@order.Status</dd>
+                        </div>
+                        </dl>
+                    </div>
+                    </section>
+
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

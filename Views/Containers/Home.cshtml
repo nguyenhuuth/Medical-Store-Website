@@ -1,0 +1,175 @@
+﻿@using MedicalStore.Utils.Common
+@{
+    this.ViewData["Title"] = Routers.Home.Title;
+    var products = (List<Product>)this.ViewData["products"];
+
+    var cartItems = (List<Product>)this.ViewData["cartItems"];
+    var total = (int)this.ViewData["total"];
+    double totalPrice = 0;
+    var categories = (SelectList)this.ViewData["categories"];
+    var min = (string)this.Context.Request.Query["min"];
+    var max = (string)this.Context.Request.Query["max"];
+    var name = (string)this.Context.Request.Query["name"];
+    var categoryId = (string)this.Context.Request.Query["categoryId"];
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        <!-- BEGIN: Side Menu -->
+        @await Html.PartialAsync("../Components/Navbar/NavbarSide.cshtml")
+        <!-- END: Side Menu -->
+        <!-- BEGIN: Content -->
+        <div class="content">
+            <!-- BEGIN: Top Bar -->
+            <!-- END: Top Bar -->
+
+            <div class="grid grid-cols-12 gap-5 mt-5 pos intro-y">
+                <!-- BEGIN: Item List -->
+                <div class="col-span-12 intro-y lg:col-span-7">
+                    <form id="formFilter">
+                        <div class="flex items-end space-x-2">
+                            <div class="space-y-2">
+                                <label>Name</label>
+                                @await Html.PartialAsync("../Components/Form/TextField.cshtml", new
+                                {
+                                Label = "Name",
+                                Field = "name",
+                                Type = "text",
+                                Value = name
+                                })
+                            </div>
+                            <div class="space-y-2">
+                                <label>Min Price</label>
+                                @await Html.PartialAsync("../Components/Form/TextFieldNumber.cshtml", new
+                                {
+                                Label = "Min price",
+                                Field = "min",
+                                Step = "0.01",
+                                Value = min
+                                })
+                            </div>
+                            <div class="space-y-2">
+                                <label>Max Price</label>
+                                @await Html.PartialAsync("../Components/Form/TextFieldNumber.cshtml", new
+                                {
+                                Label = "Max price",
+                                Field = "max",
+                                Step = "0.01",
+                                Value = max
+                                })
+                            </div>
+                            <div class="space-y-2">
+                                <label>Category</label>
+                                @await Html.PartialAsync("../Components/Form/SelectList.cshtml", new
+                                {
+                                Label = "Max price",
+                                Values = categories,
+                                Value = categoryId,
+                                Field = "categoryId"
+                                })
+                            </div>
+                            <div class="flex items-end">
+                                <button class="mb-2 btn btn-primary">
+                                    <i data-feather="search" class="w-5 h-5"></i>
+                                </button>
+
+                            </div>
+
+                            @await Html.PartialAsync("../Components/Form/FormHidden.cshtml",
+                            new { Name = "pageSize", Value = (string)this.Context.Request.Query["pageSize"] ?? "12" })
+                            @await Html.PartialAsync("../Components/Form/FormHidden.cshtml",
+                            new { Name = "pageIndex", Value = (string)this.Context.Request.Query["pageIndex"] ?? "0" })
+                        </div>
+
+                    </form>
+                    <div class="grid grid-cols-12 gap-5 pt-5 mt-5 border-t border-theme-5" id="store">
+                        @foreach (var item in products)
+                        {
+                            <button type="button" class="block col-span-4 intro-y md:col-span-3" data-id="@item.ProductId">
+                                <div class="relative p-3 rounded-md duration hover:bg-blue-200 box">
+                                    <div class="relative flex-none block pos-image">
+                                        <div class="pos-image__preview image-fit">
+                                            <img alt="@item.Name" src="@item.ImageUrl">
+                                            @* <img alt="@item.Name" src="https://picsum.photos/200/300"> *@
+                                        </div>
+                                    </div>
+                                    <div class="block mt-3 font-medium text-center truncate">@item.Name</div>
+                                    <div class="block mt-3 font-medium text-center truncate">@item.RetailPrice VND</div>
+                                    <div class="block mt-3 font-medium text-center truncate">Quanlity: @item.Quantity</div>
+                                </div>
+                            </button>
+                        }
+                    </div>
+                    @await Html.PartialAsync("../Components/Common/Pagination.cshtml",
+                    new
+                    {
+                    PageIndex = (string)this.Context.Request.Query["pageIndex"] ?? "0",
+                    PageSize =
+                    (string)this.Context.Request.Query["pageSize"] ?? "12",
+                    Total = total
+                    })
+                </div>
+                <!-- END: Item List -->
+                <!-- BEGIN: Ticket -->
+                <form id="order" class="col-span-12 space-y-2 lg:col-span-5">
+                    <div>
+                        <div class="bg-white rounded-r-md intro-y rounded-t-md ">
+                            <div class="p-2 ">
+                                <div class="justify-center pos__tabs nav nav-tabs" role="tablist">
+                                    <a id="ticket-tab" data-toggle="tab" data-target="#ticket" href="javascript:;"
+                                        class="flex-1 py-2 font-semibold text-center rounded-md " role="tab"
+                                        aria-controls="ticket" aria-selected="false">My Cart</a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="p-3 bg-white intro-y ">
+                            @await Html.PartialAsync("../Components/Form/FormMessage.cshtml")
+                            <label>Payment Method</label>
+                            <div class="flex flex-col mt-2 sm:flex-row">
+                                <div class="mr-2 form-check">
+                                    <input id="radio-switch-4" class="form-check-input" type="radio" name="payment"
+                                        value="0" checked="checked"> <label class="form-check-label"
+                                        for="radio-switch-4">Cash</label>
+                                </div>
+                                <div class="mt-2 mr-2 form-check sm:mt-0">
+                                    <input id="radio-switch-5" class="form-check-input" type="radio" name="payment"
+                                        value="1"> <label class="form-check-label" for="radio-switch-5">Credit
+                                        Card</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="mb-2 overflow-hidden tab-content" id="cart">
+                            <div
+                                class="flex items-center block p-3 transition duration-300 ease-in-out rounded-md cursor-pointer ">
+                                <div class="w-3/6 mr-1 truncate pos__ticket__item-name">
+                                    Total
+                                </div>
+                                <div class="flex items-center w-1/6 space-x-2">
+
+                                </div>
+                                <div class="w-1/6 ml-auto font-medium" id="total">$@totalPrice</div>
+                            </div>
+                        </div>
+
+                        @await Html.PartialAsync("../Components/Form/FormBtn.cshtml", "Order Product")
+                    </div>
+
+                </form>
+                <!-- END: Ticket -->
+            </div>
+        </div>
+        <!-- END: Content -->
+    </div>
+
+</div>
+
+@section Scripts {
+
+<script src="/js/home.js"></script>
+<script src="/js/pagination.js"></script>
+
+}

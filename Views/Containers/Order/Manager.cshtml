@@ -1,0 +1,114 @@
+﻿
+@using MedicalStore.Models
+@using MedicalStore.Utils.Common;
+@{
+    this.ViewData["Title"] = Routers.Category.Title;
+    var orders = (List<Order>)this.ViewData["orders"];
+    var total = (int)this.ViewData["total"];
+    var search = (string)this.Context.Request.Query["search"];
+    var endDate = (string)this.Context.Request.Query["endDate"];
+    var startDate = (string)this.Context.Request.Query["startDate"];
+    float profit = (float)this.ViewData["profit"];
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6 ">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="content">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">
+                        Order Management
+                    </h2>
+                </div>
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+
+                    <form id="formFilter">
+                        <div class="flex items-end space-x-2">
+                            <div class="space-y-2">
+                                <label>Name</label>
+                                @await Html.PartialAsync("../../Components/Form/TextField.cshtml", new {Label="Name",
+                                Field="search",Type="text", Value=search})
+                            </div>
+
+                            <div class="space-y-2">
+                                <label>Start Date</label>
+                                @await Html.PartialAsync("../../Components/Form/TextField.cshtml", new {Label="Start Date",Field="startDate", Type="date", Value=startDate})
+                            </div>
+                            <div class="space-y-2">
+                                <label>End Date</label>
+                                @await Html.PartialAsync("../../Components/Form/TextField.cshtml", new {Label="End Date", Field="endDate",Type="date", Value=endDate})
+                            </div>
+                            <div class="flex items-end">
+                                <button class="mb-2 btn btn-primary">
+                                    <i data-feather="search" class="w-5 h-5"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                        @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                        new { Name = "pageSize", Value = (string) this.Context.Request.Query["pageSize"] ?? "12" })
+                        @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                        new { Name = "pageIndex",Value = (string) this.Context.Request.Query["pageIndex"] ?? "0" })
+                    </form>
+                </div>
+
+                <div class="p-5" id="hoverable-table">
+                    <div class="preview">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">#
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Customer Name
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Create Date
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Payment
+                                            Method
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Stauts</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">View Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < orders.Count; i++)
+                                    {   
+                                        var item = orders[i];
+                                        var link = $"{Routers.OrderDetail.Link}?orderId={item.OrderId}";
+                                        <tr class="hover:bg-gray-200">
+                                            <td class="border">@(i+1)</td>
+                                            <td class="border">@item.Customer.Name</td>
+                                            <td class="border">@item.CreateDate</td>
+                                            <td class="border">@item.PaymentMethod</td>
+                                            <td class="border">
+                                                @await Html.PartialAsync("../../Components/Table/Status.cshtml", item.Status
+                                            == OrderStatus.ACTIVE )
+                                            </td>
+                                            <td class="border">
+                                                <a href="@link" class="mb-2 mr-1 btn btn-primary"> <i
+                                                    data-feather="shopping-bag" class="w-5 h-5"></i> </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr class="border-t border-gray-200">
+                                        <th colspan="2" scope="colgroup" class="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6">Profit</th>
+                                        <th colspan="4" scope="colgroup" class="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6">@profit VNĐ</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                              @await Html.PartialAsync("../../Components/Common/Pagination.cshtml",
+                            new { PageIndex = (string) this.Context.Request.Query["pageIndex"] ?? "0", PageSize =
+                            (string)
+                            this.Context.Request.Query["pageSize"]?? "12", Total = total })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+<script src="/js/pagination.js"></script>
+}

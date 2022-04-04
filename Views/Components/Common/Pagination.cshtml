@@ -1,0 +1,111 @@
+@{
+    decimal pageIndex = Decimal.Parse(Model.PageIndex) ?? 0;
+    decimal pageSize = Decimal.Parse(Model.PageSize) ?? 12;
+    decimal total = Model.Total;
+
+    var totalPage = (int)Math.Ceiling(total / pageSize);
+
+    var totalRender = totalPage < 3 ? totalPage : 3;
+
+    var pageRange = (((int)pageIndex - 1) < 0) ? 0 : ((int)pageIndex - 1);
+
+    if (totalPage > 3 && pageIndex > totalPage - 3)
+    {
+        pageRange = totalPage - 3;
+    }
+
+    // Fix pageRange when totalPage = 2 or 3
+    if (totalPage - pageRange < totalRender)
+    {
+        pageRange = 0;
+    }
+
+    var previousPage = pageIndex - 1;
+    if (previousPage < 0)
+    {
+        previousPage = 0;
+    }
+
+    var nextPage = pageIndex + 1;
+    if (nextPage > totalPage - 1)
+    {
+        nextPage = pageIndex;
+    }
+
+    var lastPage = totalPage - 1;
+    if (lastPage < 0)
+    {
+        lastPage = 0;
+    }
+
+    var showMax = (pageIndex + 1) * pageSize;
+
+    Console.WriteLine(pageIndex);
+    Console.WriteLine(pageSize);
+    Console.WriteLine(total);
+    Console.WriteLine(previousPage);
+    Console.WriteLine(nextPage);
+}
+
+
+<div class="flex flex-wrap items-center col-span-12 py-2 intro-y sm:flex-row sm:flex-nowrap">
+    <ul class="pagination" id="pagination-btn">
+        <li>
+            <button data-index="0" class="pagination__link"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 feather feather-chevrons-left">
+                    <polyline points="11 17 6 12 11 7"></polyline>
+                    <polyline points="18 17 13 12 18 7"></polyline>
+                </svg> </button>
+        </li>
+        <li>
+            <button data-index="@previousPage" class="pagination__link"> <svg xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 feather feather-chevron-left">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg> </button>
+        </li>
+
+        @for (int i = pageRange; i < pageRange + totalRender; i++)
+        {
+            var display = i + 1;
+
+            if (i == pageIndex)
+            {
+                <li class="mx-2">
+
+                    <button data-index="@i" type="button" class="p-2 font-semibold text-blue-500" aria-current="page">
+                        @display
+                    </button>
+                </li>
+            }
+            else
+            {
+                <li class="mx-2">
+                    <button data-index="@i" type="button" class="p-2 font-medium" aria-current="page">
+                        @display
+                    </button>
+                </li>
+
+            }
+        }
+
+
+        <li>
+            <button data-index="@nextPage" class="pagination__link"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 feather feather-chevron-right">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg> </button>
+        </li>
+        <li>
+            <button data-index="@lastPage" class="pagination__link"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 feather feather-chevrons-right">
+                    <polyline points="13 17 18 12 13 7"></polyline>
+                    <polyline points="6 17 11 12 6 7"></polyline>
+                </svg> </button>
+        </li>
+    </ul>
+
+</div>

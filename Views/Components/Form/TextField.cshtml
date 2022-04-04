@@ -1,0 +1,12 @@
+@{
+    Console.WriteLine(Model.Field);
+    var error = $"{Model.Field.ToUpper()}ERROR";
+    string value = Model.Value == null ? "" : Model.Value;
+}
+
+
+<div class="space-y-2 ">
+    <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control" type="@Model.Type"
+        name="@Model.Field" id="@Model.Field" value="@value" placeholder="@Model.Label" />
+    <div id="@error" data-label="@Model.Label" class="text-red-500 "></div>
+</div>

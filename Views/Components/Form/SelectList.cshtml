@@ -1,0 +1,17 @@
+@{
+
+    var error = $"{Model.Field.ToUpper()}ERROR";
+}
+
+<div class="space-y-2">
+    <select class=" form-select form-select-lg" name="@Model.Field" id="@Model.Field">
+
+        @foreach (var item in Model.Values.Items)
+        {
+            var selected = item.Value == Model.Value ? "selected" : "";
+            @:<option value="@item.Value" @selected>@item.Text</option>
+        }
+
+    </select>
+    <div id="@error" data-label="@Model.Label" class="text-red-500 "></div>
+</div>

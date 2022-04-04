@@ -1,0 +1,79 @@
+﻿@using MedicalStore.Utils.Common
+@{
+    this.ViewData["Title"] = Routers.UserProfile.Title;
+    var user = (User)this.ViewData["user"];
+    var userProfile = (User)this.ViewData["userProfile"];
+    int check = (int)this.ViewData["check"];
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="container">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">
+                        @userProfile.Name Profile
+                    </h2>
+                </div>
+                <div>
+                    <dl class="mt-2 divide-y divide-gray-200">
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Username</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@userProfile.Username</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">FullName</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@userProfile.Name</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@userProfile.Email</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Phone Number</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@userProfile.Phone</dd>
+                </div>
+                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Address</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@userProfile.Address</dd>
+                </div>
+                </dl>
+            </div>
+            @if (user != null &&  check == 1 && user.RoleId == "0")
+            {
+                <div class="min-h-full flex ">
+                    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+                        <div class="mx-auto w-full max-w-sm lg:w-96">
+                            <div>
+                                <form id="banForm" class="space-y-6">
+                                    <input type="hidden" name="userId" id="userId" value="@userProfile.UserId" />
+                                    @if (userProfile.Status == UserStatus.ACTIVE)
+                                    {
+
+                                        <button type="submit" onclick="return confirm('Are you sura you want to ban this user @userProfile.Name')"
+                                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Ban User
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" onclick="return confirm('Are you sura you want to unban this user @userProfile.Name')"
+                                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            UnBan User
+                                        </button>
+                                    }
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <script src="~/js/user/ban.js"></script>
+}

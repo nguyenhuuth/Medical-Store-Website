@@ -1,0 +1,103 @@
+﻿@using MedicalStore.Utils.Common
+@{
+
+    this.ViewData["Title"] = Routers.Product.Title;
+    var listProduct = (List<Product>)this.ViewData["listProduct"];
+    var user = (User)this.ViewData["user"];
+    var listShopName = (List<string>)this.ViewData["listShopName"];
+    var total = (int)this.ViewData["total"];
+}
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="container">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">
+                        @((user.RoleId.Equals("2")) ? ("All Products of shop " + user.Name) : "All Products")
+                    </h2>
+                </div>
+                <form id="formFilter">
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageSize", Value = (string)this.Context.Request.Query["pageSize"] ?? "12" })
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageIndex", Value = (string)this.Context.Request.Query["pageIndex"] ?? "0" })
+                </form>
+                <div class="p-5" id="hoverable-table">
+                    <div class="preview">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">#</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Image</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Product Name
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Description
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Create Date
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Quantity</th>
+                                        @if (user.RoleId.Equals("0"))
+                                        {
+                                            <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Shop Name
+                                            </th>
+                                        }
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Status</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">View Detail
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < listProduct.Count; i++)
+                                    {
+                                        var item = listProduct[i];
+                                        var link = $"{Routers.ProductDetail.Link}?productId={item.ProductId}";
+                                        <tr class="hover:bg-gray-200">
+                                            <td class="border">@(i+1)</td>
+                                            <td class="border"><img src="@item.ImageUrl" alt="@item.Name" width="70px"
+                                                height="70px" /></td>
+                                            <td class="border">@(item.Name.Length >= 20 ? item.Name.Substring(0,20) + " ..."
+                                            : item.Name)</td>
+                                            <td class="border">@(item.Description.Length >= 30 ?
+                                            item.Description.Substring(0,30) + " ..." : item.Description)</td>
+                                            <td class="border">@item.CreateDate</td>
+                                            <td class="border">@item.Quantity</td>
+                                            @if (user.RoleId.Equals("0"))
+                                            {
+                                                <td class="border">@(listShopName.ElementAt<string>(i))</td>
+                                            }
+                                            <td class="border">
+                                                @await Html.PartialAsync("../../Components/Table/Status.cshtml", item.Status
+                                            == ProductStatus.ACTIVE)
+                                            </td>
+                                            <td class="border">
+                                                <a href="@link" class="mb-2 mr-1 btn btn-primary">
+                                                    <i data-feather="shopping-bag" class="w-5 h-5"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @await Html.PartialAsync("../../Components/Common/Pagination.cshtml",
+                            new
+                            {
+                            PageIndex = (string)this.Context.Request.Query["pageIndex"] ?? "0",
+                            PageSize =
+                            (string)
+                            this.Context.Request.Query["pageSize"] ?? "12",
+                            Total = total
+                            })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script src="/js/product/delete.js"></script>
+<script src="/js/pagination.js"></script>
+}

@@ -1,0 +1,77 @@
+﻿@using MedicalStore.Utils.Common
+@{
+    this.ViewData["Title"] = Routers.ReportList.Title;
+    var listReport = (List<ReportTicket>)this.ViewData["listReportByProductId"];
+    var product = (Product)this.ViewData["product"];
+    var user = (User)this.ViewData["user"];
+    var shop = (User)this.ViewData["shop"];
+    var listCustomer = (List<User>)this.ViewData["listCustomer"];
+
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="content">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">Report of product @product.Name</h2>
+                </div>
+                <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                    <img src="@product.ImageUrl" alt="@product.Name" width="300px" height="300px"/>
+                </div>
+                <div>
+                        <dl class="mt-2 divide-y divide-gray-200">
+                            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Product Name</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@product.Name</dd>
+                            </div>
+                            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">Shop Name</dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@shop.Name</dd>
+                            </div>
+                                <div class="relative">
+                                    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                        <div class="w-full border-t border-gray-300"></div>
+                                    </div>
+                                    <div class="relative flex justify-start">
+                                        <span class="pr-3 bg-white text-lg font-medium text-gray-900"> Report List </span>
+                                    </div>
+                            </div>
+                            @for(int i = 0; i < @listReport.Count; i++)
+                            {
+                                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">Report Number #@(i+1)</dt>
+                                </div>
+                                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">Customer Name</dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@listCustomer[i].Name</dd>
+                                </div>
+                                <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">Report Description</dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@listReport[i].Description</dd>
+                                </div>
+                            }
+                        </dl>
+                </div>
+                @if(user.RoleId == "1"){
+                <div class="min-h-full flex ">
+                    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+                        <div class="mx-auto w-full max-w-sm lg:w-96">
+                            <a href="/report/create?productId=@product.ProductId" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                   Create new report
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        
+        <script src="/js/report/create.js"></script>
+    }

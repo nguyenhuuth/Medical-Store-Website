@@ -1,0 +1,11 @@
+@{
+    var error = $"{Model.Field.ToUpper()}ERROR";
+    string value = Model.Value == null ? "" : Model.Value;
+}
+
+
+<div class="space-y-2 ">
+    <input type="number" step="@Model.Step" name="@Model.Field" id="@Model.Field" value="@value"
+        class="block px-4 py-3 border-gray-300 intro-x login__input form-control" placeholder="@Model.Label">
+    <div id="@error" data-label="@Model.Label" class="text-red-500 "></div>
+</div>

@@ -1,0 +1,93 @@
+﻿@using MedicalStore.Models
+@using MedicalStore.Utils.Common
+@{
+    var reportNums = (List<int>)this.ViewData["reportNums"];
+    var orderNums = (List<int>)this.ViewData["orderNums"];
+    var totals = (List<float>)this.ViewData["totals"];
+    var listCustomer = (List<User>)this.ViewData["listCustomer"];
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="container">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">
+                        All Customer
+                    </h2>
+                </div>
+                <form id="formFilter">
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageSize", Value = (string)this.Context.Request.Query["pageSize"] ?? "12" })
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageIndex", Value = (string)this.Context.Request.Query["pageIndex"] ?? "0" })
+                </form>
+                <div class="p-5" id="hoverable-table">
+                    <div class="preview">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">#</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Name</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Order Number</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">
+                                            Bought Amount
+                                            <a href="/admin/customer?sortBy=buyIncreasing"
+                                                title="Sort by increasing Bought Amount">▲</a>
+                                            <a href="/admin/customer?sortBy=buyDecreasing"
+                                                title="Sort by descending Bought Amount">▼</a>    
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">
+                                            Report Number
+                                            <a href="/admin/customer?sortBy=reportIncreasing"
+                                                title="Sort by increasing Report time">▲</a>
+                                            <a href="/admin/customer?sortBy=reportDecreasing"
+                                                title="Sort by descending Report time">▼</a>    
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Status</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Profile</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < listCustomer.Count; i++)
+                                    {
+                                        var link = $"{Routers.UserProfile.Link}?userId={listCustomer[i].UserId}";
+                                        var linkReport = $"{Routers.Report.Link}?userId={listCustomer[i].UserId}";
+                                        <tr class="hover:bg-gray-200">
+                                            <td class="border">@(i+1)</td>
+                                            <td class="border">@listCustomer[i].Name</td>
+                                            <td class="border">@orderNums[i]</td>
+                                            <td class="border">@totals[i]</td>
+                                            <td class="border">
+                                                <a href="@linkReport" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                    @reportNums[i]
+                                                </a>
+                                            </td>
+                                            <td class="border">@await Html.PartialAsync("../../Components/Table/Status.cshtml", listCustomer[i].Status == UserStatus.ACTIVE)</td>
+                                            <td class="border">
+                                                <a href="@link" class="mb-2 mr-1 btn btn-primary">
+                                                    <i data-feather="shopping-bag" class="w-5 h-5"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @await Html.PartialAsync("../../Components/Common/Pagination.cshtml",
+                            new
+                                 {
+                                     PageIndex = (string)this.Context.Request.Query["pageIndex"] ?? "0",
+                                     PageSize =
+                            (string)
+                            this.Context.Request.Query["pageSize"] ?? "12",
+                                     Total = listCustomer.Count
+                                 })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

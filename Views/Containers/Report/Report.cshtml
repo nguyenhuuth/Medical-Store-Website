@@ -1,0 +1,85 @@
+﻿@using MedicalStore.Utils.Common
+@{
+    this.ViewData["Title"] = Routers.Report.Title;
+    var userSearch = (User)this.ViewData["userSearch"];
+    var reportNums = (List<int>)this.ViewData["reportNums"];
+    var listProduct = (List<Product>)this.ViewData["listProduct"];
+    var shopNames = (List<string>)this.ViewData["shopNames"];
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="container">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">
+                        @((userSearch.RoleId == "2") ? ("All Report of shop " + userSearch.Name) : ("All Report of " + userSearch.Name))
+                    </h2>
+                </div>
+                @await Html.PartialAsync("../../Components/Form/FormMessage.cshtml")
+                <form id="formFilter">
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageSize", Value = (string)this.Context.Request.Query["pageSize"] ?? "12" })
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageIndex", Value = (string)this.Context.Request.Query["pageIndex"] ?? "0" })
+
+                </form>
+                <div class="p-5" id="hoverable-table">
+                    <div class="preview">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">#</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Image</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Product Name</th>
+                                        @if(userSearch.RoleId == "1")
+                                        {
+                                            <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Shop Name</th>
+                                        }
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Report Number</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < listProduct.Count; i++)
+                                    {
+                                        var link = $"{Routers.ReportList.Link}?productId={listProduct[i].ProductId}";
+                                        <tr class="hover:bg-gray-200">
+                                            <td class="border">@(i+1)</td>
+                                            <td class="border"><img src="@listProduct[i].ImageUrl" alt="@listProduct[i].Name" width="100px" height="100px"/></td>
+                                            <td class="border">@(listProduct[i].Name.Length >= 30 ? listProduct[i].Name.Substring(0,30) + " ..." : listProduct[i].Name)</td>
+                                            @if (userSearch.RoleId == "1")
+                                            {
+                                                <td class="border">@shopNames[i]</td>
+                                            }
+                                            <td class="border">@reportNums[i]</td>
+                                            <td class="border">
+                                                <a href="@link" class="mb-2 mr-1 btn btn-primary">
+                                                    <i data-feather="clipboard" class="w-5 h-5"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @await Html.PartialAsync("../../Components/Common/Pagination.cshtml",
+                            new
+                                 {
+                                     PageIndex = (string)this.Context.Request.Query["pageIndex"] ?? "0",
+                                     PageSize =
+                            (string)
+                            this.Context.Request.Query["pageSize"] ?? "12",
+                                     Total = listProduct.Count
+                                 })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="/js/pagination.js"></script>
+}

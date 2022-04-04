@@ -1,0 +1,103 @@
+﻿@using MedicalStore.Utils.Common
+@model IEnumerable<MedicalStore.Models.Product>
+@{
+    var product = (Product)this.ViewData["product"];
+    this.ViewData["Title"] = Routers.UpdateProduct.Title;
+    var category = (Category)this.ViewData["category"];
+}
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="content">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Update product</h2>
+                </div>
+                <dl class="mt-2 divide-y divide-gray-200">
+                    <form id="updateForm" class="space-y-6">
+                        @await Html.PartialAsync("../../Components/Form/FormMessage.cshtml")
+                        <input type="hidden" id="productId" value="@product.ProductId" />
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ">
+                            <dt class="text-sm font-medium text-gray-500">Product Name</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                    type="text" name="productName" id="productName" value="@product.Name"
+                                    placeholder="Name" />
+                                <div id="PRODUCTNAMEERROR" data-label="Name" class="text-red-500 "></div>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Description</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <textarea
+                                    class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                    name="description" id="productDescription" rows="10"
+                                    cols="70">@product.Description</textarea>
+                                <div id="PRODUCTDESCRIPTIONERROR" data-label="Description" class="text-red-500 "></div>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ">
+                            <dt class="text-sm font-medium text-gray-500">Original Price</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                    type="number" name="originalprice" id="originalPrice" value="@product.OriginalPrice"
+                                    placeholder="OriginalPrice" />
+                                <div id="ORIGINALPRICEERROR" data-label="OriginalPrice" class="text-red-500 "></div>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ">
+                            <dt class="text-sm font-medium text-gray-500">Retai Price</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                    type="number" name="retailprice" id="retailPrice" value="@product.RetailPrice"
+                                    placeholder="RetailPrice" />
+                                <div id="RETAILPRICEERROR" data-label="RetailPrice" class="text-red-500 "></div>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ">
+                            <dt class="text-sm font-medium text-gray-500">Quantity</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                    type="number" name="quantity" id="quantity" value="@product.Quantity"
+                                    placeholder="Quantity" />
+                                <div id="QUANTITYERROR" data-label="Quantity" class="text-red-500 "></div>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ">
+                            <dt class="text-sm font-medium text-gray-500">Image Url</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <div class="space-y-2">
+                                    <img alt="image" id="image-preview" class="object-cover w-24 h-24 "
+                                        src="@product.ImageUrl">
+                                    <input type="file" id="image" />
+                                    <div id="IMAGEERROR" data-label="Image" class="text-red-500 "></div>
+                                </div>
+                            </dd>
+                        </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ">
+                            <dt class="text-sm font-medium text-gray-500">Category</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <input class="block px-4 py-3 w-full border-gray-300 intro-x login__input form-control"
+                                    type="text" name="category" value="@category.Name"
+                                    placeholder="Category" readonly />
+                                <input type="hidden" id="categoryId" value="@category.CategoryId"/>
+                            </dd>
+                        </div>
+                        <div>
+                            <button type="submit"
+                                onclick="return confirm('Are you sura you want to Update Product @product.Name')"
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+<script src="/js/product/update.js"></script>
+}

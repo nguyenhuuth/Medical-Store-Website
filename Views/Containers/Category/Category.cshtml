@@ -1,0 +1,99 @@
+﻿@using MedicalStore.Models
+@using MedicalStore.Utils.Common
+@{
+    this.ViewData["Title"] = Routers.Category.Title;
+    var listCategory = (List<Category>)this.ViewData["listCategory"];
+    var total = (int)this.ViewData["total"];
+    var user = (User)this.ViewData["user"];
+    Console.WriteLine(user.RoleId);
+}
+
+<div class="flex-1 min-h-screen px-2 py-2 xl:px-8 xl:py-6">
+    <div class="flex">
+        @await Html.PartialAsync("../../Components/Navbar/NavbarSide.cshtml")
+        <div class="container">
+            <div class="mt-5 intro-y box">
+                <div class="flex flex-col items-center p-5 border-b border-gray-200 sm:flex-row">
+                    <h2 class="mr-auto text-base font-medium">
+                        All Categories
+                    </h2>
+                </div>
+                @await Html.PartialAsync("../../Components/Form/FormMessage.cshtml")
+                <form id="formFilter">
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageSize", Value = (string)this.Context.Request.Query["pageSize"] ?? "12" })
+                    @await Html.PartialAsync("../../Components/Form/FormHidden.cshtml",
+                    new { Name = "pageIndex", Value = (string)this.Context.Request.Query["pageIndex"] ?? "0" })
+
+                </form>
+                <div class="p-5" id="hoverable-table">
+                    <div class="preview">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">#</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">
+                                            Category Name
+                                            <a href="/category?sortBy=nameIncreasing"
+                                                title="Sort by increasing Name">▲</a>
+                                            <a href="/category?sortBy=nameDescending"
+                                                title="Sort by descending Name">▼</a>
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Description
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">
+                                            Create Date
+                                            <a href="/category?sortBy=createDateIncreasing"
+                                                title="Sort by increasing Create day">▲</a>
+                                            <a href="/category?sortBy=createDateDescending"
+                                                title="Sort by descending Create day">▼</a>
+                                        </th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Status</th>
+                                        <th class="border border-b-2 dark:border-dark-5 whitespace-nowrap">Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < listCategory.Count; i++)
+                                    {
+                                        var item = listCategory[i];
+                                        var link = $"{Routers.CategoryDetail.Link}?categoryId={item.CategoryId}";
+                                        <tr class="hover:bg-gray-200">
+                                            <td class="border">@(i+1)</td>
+                                            <td class="border">@(item.Name.Length >= 30 ? item.Name.Substring(0,30) + " ..."
+                                            : item.Name)</td>
+                                            <td class="border">@(item.Description.Length >= 40 ?
+                                            item.Description.Substring(0,40) + " ..." : item.Description)</td>
+                                            <td class="border">@item.CreateDate</td>
+                                            <td class="border">
+                                                @await Html.PartialAsync("../../Components/Table/Status.cshtml", item.Status
+                                            == CategoryStatus.ACTIVE)
+                                            </td>
+                                            <td class="border">
+                                                <a href="@link" class="mb-2 mr-1 btn btn-primary">
+                                                    <i data-feather="shopping-bag" class="w-5 h-5"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @await Html.PartialAsync("../../Components/Common/Pagination.cshtml",
+                            new
+                            {
+                            PageIndex = (string)this.Context.Request.Query["pageIndex"] ?? "0",
+                            PageSize =
+                            (string)
+                            this.Context.Request.Query["pageSize"] ?? "12",
+                            Total = total
+                            })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+<script src="/js/pagination.js"></script>
+}

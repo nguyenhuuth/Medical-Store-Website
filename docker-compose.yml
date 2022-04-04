@@ -1,0 +1,10 @@
+version: "3"
+services:
+        server:
+                build: .
+                image: thuandemo/medical-store:latest
+                container_name: medical-store
+                expose:
+                        - 80
+                volumes:
+                        - ./config:/app/config
